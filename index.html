@@ -1,13 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>odinCalculator</title>
+    <title>Odin Calculator</title>
     <link rel="stylesheet" href="./indexStyle.css">
     <script src="./indexScript.js" defer></script>
 </head>
+
 <body>
-    
+    <h1>Odin Calculator</h1>
+    <div id="wholeCalc">
+        <div class="aRow" id="row1">
+            <div class="aBox" id="history">0123456789876543</div>
+        </div>
+        <div class="aRow" id="row2">
+            <div class="aBox" id="display">0123456789876543</div>
+        </div>
+        <div class="aRow" id="row3">
+            <button class="aBox" id="clearButton">AC</button>
+            <button class="aBox" id="delButton">⌫</button>
+            <button class="aBox opsButton" id="divButton">/</button>
+        </div>
+        <div class="aRow" id="row4">
+            <button class="aBox numButton" id="button7">7</button>
+            <button class="aBox numButton" id="button8">8</button>
+            <button class="aBox numButton" id="button9">9</button>
+            <button class="aBox opsButton" id="multButton">*</button>
+        </div>
+        <div class="aRow" id="row5">
+            <button class="aBox numButton" id="button4">4</button>
+            <button class="aBox numButton" id="button5">5</button>
+            <button class="aBox numButton" id="button6">6</button>
+            <button class="aBox opsButton" id="subtButton">-</button>
+        </div>
+        <div class="aRow" id="row6">
+            <button class="aBox numButton" id="button1">1</button>
+            <button class="aBox numButton" id="button2">2</button>
+            <button class="aBox numButton" id="button3">3</button>
+            <button class="aBox opsButton" id="addButton">+</button>
+        </div>
+        <div class="aRow" id="row7">
+            <button class="aBox numButton" id="button0">0</button>
+            <button class="aBox" id="decButton">.</button>
+            <button class="aBox" id="equButton">=</button>
+        </div>
+    </div>
 </body>
+
 </html>
