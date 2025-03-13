@@ -104,4 +104,5 @@ decButton.addEventListener("click", function (evnt) {
     let currArgNum = Number(currArg);
     if(!Number.isInteger(currArgNum)) return;
     currArg+=".";
+    display.textContent=currArg;
 });
