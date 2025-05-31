@@ -50,7 +50,14 @@ oprButtons.forEach((oprButton) => {
             return;
         } else if (prevArg !== "" && currOpr !== "" && currArg !== "") {
             //calculate first existing result and use it as previous Arg
-            prevArg = doCalc();
+            let result = doCalc(); // Calculate before setting new operator
+            if (result === "notYet" && display.textContent.startsWith("Error:")) {
+                // If calculation resulted in an error (like div by zero),
+                // don't proceed with setting new operator based on error message.
+                // State should have been reset by doCalc in this case.
+                return;
+            }
+            prevArg = result;
             currArg = "";
             currOpr = oprButton.value;
             history.textContent = prevArg + " " + currOpr;
@@ -85,24 +92,55 @@ const doCalc = function () {
     } else if (currOpr === "*") {
         return (Math.round((prevArgNum * currArgNum) * 1000000000) / 1000000000).toString();
     } else if (currOpr === "/") {
+        if (currArgNum === 0) { // Check if the divisor is zero
+            history.textContent = prevArgNum + " " + currOpr + " " + currArgNum + " ="; // Show the attempted operation in history
+            display.textContent = "Error: Cannot divide by zero"; // Display error message
+            // Reset state to prevent further calculation with the error
+            currArg = "";
+            prevArg = ""; // Clear prevArg as well, operation failed.
+            currOpr = "";
+            return "notYet"; // Indicate that a valid calculation wasn't performed
+        }
         return (Math.round((prevArgNum / currArgNum) * 1000000000) / 1000000000).toString();
     }
 }
 
 equButton.addEventListener("click", function (evnt) {
+    // If user hits equals again without new input after a calculation or error, do nothing.
+    if (prevArg !== "" && currArg === "" && currOpr === "" && display.textContent !== "") {
+         // This condition means a result (or error) is already on display, and no new currArg or currOpr.
+        return;
+    }
+    // If input is incomplete for a new calculation, also do nothing.
+    if (currArg === "" || prevArg === "" || currOpr === "") {
+        // Allow if only currArg is present and prevArg is not (e.g. "5=") which is not standard
+        // but current logic implies an operation is needed. For now, we require all parts.
+        return;
+    }
+
+    let originalCurrArg = currArg; // Keep a copy for history if calculation is successful
     let result = doCalc();
-    if (result === "notYet") return;
-    history.textContent += " " + currArg + " " + "=";
+
+    if (result === "notYet") {
+        // If doCalc returned "notYet", it means either incomplete input (already checked)
+        // or an error like division by zero, which doCalc would have handled by setting display.
+        // History for errors is set within doCalc.
+        return;
+    }
+
+    history.textContent = prevArg + " " + currOpr + " " + originalCurrArg + " " + "=";
     display.textContent = result;
+    prevArg = result; // Store the result as prevArg for potential chaining
     currArg = "";
-    prevArg = "";
-    currOpr = "";
+    currOpr = ""; // Clear operator after calculation
 });
 
 decButton.addEventListener("click", function (evnt) {
-    if (currArg === "") return;
-    let currArgNum = Number(currArg);
-    if(!Number.isInteger(currArgNum)) return;
-    currArg+=".";
+    if (currArg.includes(".")) return; // Prevent multiple decimal points
+    if (currArg === "") { // If currArg is empty, start with "0."
+        currArg="0.";
+    } else {
+        currArg+=".";
+    }
     display.textContent=currArg;
 });
